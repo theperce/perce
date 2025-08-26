@@ -1,63 +1,47 @@
-# Telegram Mini App
+# Le Gourmet — Ресторан (PHP + SQLite)
 
-A simple mini app for Telegram bots that demonstrates core functionality of the Telegram Web App API.
-
-## Features
-
-- Automatic theme adaptation (light/dark)
-- User information display
-- Main Button demonstration
-- Sending data back to the bot
-- BackButton handling
-
-## Setup Instructions
-
-### 1. Host the mini app
-
-Host these files on a web server that supports HTTPS. You can use services like:
-- GitHub Pages
-- Vercel
-- Netlify
-- Firebase Hosting
-
-### 2. Create a bot and configure the mini app
-
-1. Talk to [@BotFather](https://t.me/BotFather) on Telegram
-2. Create a new bot with the `/newbot` command
-3. After creating your bot, use the `/mybots` command
-4. Select your bot
-5. Go to "Bot Settings" > "Menu Button" or use the command `/setmenubutton`
-6. Set the menu button URL to your hosted mini app URL
-
-### 3. Add code to your bot to handle incoming data
-
-When users interact with the mini app, it will send data to your bot. You need to implement handlers in your bot code to process this data.
-
-Example for a Node.js bot using the `node-telegram-bot-api` library:
-
-```javascript
-const TelegramBot = require('node-telegram-bot-api');
-const bot = new TelegramBot(token, {polling: true});
-
-// Handle web app data
-bot.on('web_app_data', (msg) => {
-  const data = JSON.parse(msg.web_app_data.data);
-  
-  bot.sendMessage(
-    msg.chat.id, 
-    `Received data: ${JSON.stringify(data, null, 2)}`
-  );
-});
+## Быстрый старт
+1. Установить PHP (уже установлен здесь) и расширение sqlite3
+2. Выполнить миграции и сиды:
+```bash
+php scripts/migrate.php
 ```
+3. Запустить локально:
+```bash
+php -S 0.0.0.0:8787 -t public
+```
+4. Открыть сайт: http://127.0.0.1:8787
 
-## Development Notes
+## Доступ администратора
+- Логин: `admin`
+- Пароль: `admin123`
 
-- Make sure to test your mini app in both light and dark themes
-- The app automatically adapts to the user's Telegram theme
-- Review the [Telegram Mini Apps documentation](https://core.telegram.org/bots/webapps) for more details
+## Структура
+- `public/` — публичные страницы (`index.php`, `menu.php`, `reserve.php`) и админка `admin/`
+- `src/` — конфиг, БД, авторизация, хелперы
+- `templates/` — общий `header.php` и `footer.php`
+- `public/assets/` — стили и JS
+- `scripts/migrate.php` — создание SQLite БД и тестовые данные
+- `data/database.sqlite` — база данных
 
-## Files
+## Переключение на MySQL (опционально)
+Отредактируйте `src/config.php`:
+```php
+'db' => [
+    'driver' => 'mysql',
+    'mysql_host' => '127.0.0.1',
+    'mysql_db' => 'restaurant',
+    'mysql_user' => 'root',
+    'mysql_pass' => '',
+    'mysql_charset' => 'utf8mb4',
+]
+```
+И адаптируйте SQL схемы при необходимости.
 
-- `index.html` - The main HTML structure
-- `app.js` - JavaScript for interacting with the Telegram Web App API
-- `styles.css` - Styling with theme support 
+## Безопасность
+- Сессии и CSRF токены в формах админки и резервирования
+- Подготовленные запросы PDO
+
+## UI/Анимации
+- Современный минималистичный дизайн, плавные `fade-in`, `reveal`, параллакс-фон
+- Адаптивная навигация и сетки 
