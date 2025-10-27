@@ -1,0 +1,13 @@
+[Tue Aug 26 00:08:46 2025] PHP 8.4.5 Development Server (http://0.0.0.0:8787) started
+[Tue Aug 26 00:08:54 2025] 127.0.0.1:43188 Accepted
+[Tue Aug 26 00:08:54 2025] 127.0.0.1:43188 [200]: GET /index.php
+[Tue Aug 26 00:08:54 2025] 127.0.0.1:43188 Closing
+[Tue Aug 26 00:09:04 2025] 127.0.0.1:58888 Accepted
+[Tue Aug 26 00:09:04 2025] 127.0.0.1:58888 [200]: GET /menu.php
+[Tue Aug 26 00:09:04 2025] 127.0.0.1:58888 Closing
+[Tue Aug 26 00:09:12 2025] 127.0.0.1:36014 Accepted
+[Tue Aug 26 00:09:12 2025] 127.0.0.1:36014 [200]: GET /menu.php
+[Tue Aug 26 00:09:12 2025] 127.0.0.1:36014 Closing
+[Tue Aug 26 00:09:22 2025] 127.0.0.1:39978 Accepted
+[Tue Aug 26 00:09:22 2025] 127.0.0.1:39978 [200]: GET /admin/login.php
+[Tue Aug 26 00:09:22 2025] 127.0.0.1:39978 Closing
