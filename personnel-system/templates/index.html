@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система учета персонала</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📋 Система учета персонала</h1>
+            <nav>
+                <button onclick="showSection('employees')">Сотрудники</button>
+                <button onclick="showSection('positions')">Должности</button>
+                <button onclick="showSection('schedules')">График работы</button>
+                <button onclick="showSection('rates')">Ставки</button>
+            </nav>
+        </header>
+
+        <!-- Employees Section -->
+        <section id="employees-section" class="section active">
+            <h2>👥 Сотрудники</h2>
+            <div class="form-container">
+                <h3>Добавить сотрудника</h3>
+                <form id="addEmployeeForm">
+                    <input type="text" id="employeeName" placeholder="ФИО сотрудника" required>
+                    <select id="employeePosition" required>
+                        <option value="">Выберите должность</option>
+                    </select>
+                    <input type="number" id="hourlyRate" placeholder="Ставка в час (₽)" step="0.01" min="0">
+                    <input type="number" id="dailyRate" placeholder="Ставка в день (₽)" step="0.01" min="0">
+                    <input type="number" id="weeklyRate" placeholder="Ставка в неделю (₽)" step="0.01" min="0">
+                    <input type="number" id="monthlyRate" placeholder="Ставка в месяц (₽)" step="0.01" min="0">
+                    <button type="submit">Добавить</button>
+                </form>
+            </div>
+            <div class="table-container">
+                <table id="employeesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ФИО</th>
+                            <th>Должность</th>
+                            <th>Часовая ставка</th>
+                            <th>Дневная ставка</th>
+                            <th>Недельная ставка</th>
+                            <th>Месячная ставка</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Positions Section -->
+        <section id="positions-section" class="section">
+            <h2>💼 Должности</h2>
+            <div class="form-container">
+                <h3>Добавить должность</h3>
+                <form id="addPositionForm">
+                    <input type="text" id="positionName" placeholder="Название должности" required>
+                    <input type="text" id="positionDescription" placeholder="Описание (необязательно)">
+                    <button type="submit">Добавить</button>
+                </form>
+            </div>
+            <div class="table-container">
+                <table id="positionsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Описание</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Schedules Section -->
+        <section id="schedules-section" class="section">
+            <h2>📅 График работы</h2>
+            <div class="form-container">
+                <h3>Добавить запись в график</h3>
+                <form id="addScheduleForm">
+                    <select id="scheduleEmployee" required>
+                        <option value="">Выберите сотрудника</option>
+                    </select>
+                    <input type="date" id="scheduleDate" required>
+                    <select id="shiftType" required>
+                        <option value="">Тип смены</option>
+                        <option value="morning">Утренняя (08:00-16:00)</option>
+                        <option value="day">Дневная (09:00-17:00)</option>
+                        <option value="evening">Вечерняя (14:00-22:00)</option>
+                        <option value="night">Ночная (22:00-06:00)</option>
+                        <option value="day_off">Выходной</option>
+                    </select>
+                    <input type="number" id="hoursWorked" placeholder="Отработано часов" step="0.5" min="0" max="24" value="8">
+                    <input type="text" id="scheduleNotes" placeholder="Заметки (необязательно)">
+                    <button type="submit">Добавить</button>
+                </form>
+            </div>
+            <div class="table-container">
+                <table id="schedulesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Сотрудник</th>
+                            <th>Дата</th>
+                            <th>Тип смены</th>
+                            <th>Часов</th>
+                            <th>Заметки</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Rates Section -->
+        <section id="rates-section" class="section">
+            <h2>💰 Управление ставками</h2>
+            <div class="form-container">
+                <h3>Обновить ставки сотрудника</h3>
+                <form id="updateRatesForm">
+                    <select id="ratesEmployee" required>
+                        <option value="">Выберите сотрудника</option>
+                    </select>
+                    <input type="number" id="newHourlyRate" placeholder="Новая часовая ставка (₽)" step="0.01" min="0">
+                    <input type="number" id="newDailyRate" placeholder="Новая дневная ставка (₽)" step="0.01" min="0">
+                    <input type="number" id="newWeeklyRate" placeholder="Новая недельная ставка (₽)" step="0.01" min="0">
+                    <input type="number" id="newMonthlyRate" placeholder="Новая месячная ставка (₽)" step="0.01" min="0">
+                    <button type="submit">Обновить</button>
+                </form>
+            </div>
+            <div class="info-box">
+                <p>ℹ️ Выберите сотрудника и укажите новые значения ставок. Оставьте поле пустым, чтобы сохранить текущее значение.</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
