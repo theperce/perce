@@ -1,0 +1,196 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  steamId       String    @unique
+  steamId32     String    @unique
+  name          String
+  avatar        String?
+  elo           Int       @default(1000)
+  rankLevel     Int       @default(1)
+  isBanned      Boolean   @default(false)
+  banReason     String?
+  banUntil      DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  lobbies       Lobby[]   @relation("LobbyLeader")
+  lobbyMembers  LobbyMember[]
+  matchPlayers  MatchPlayer[]
+  penalties     PenaltyHistory[]
+  sessions      Session[]
+  accounts      Account[]
+  
+  @@index([steamId])
+  @@index([elo])
+}
+
+model Lobby {
+  id          String   @id @default(cuid())
+  leaderId    String
+  code        String   @unique @default(cuid())
+  status      String   @default("WAITING") // WAITING, IN_QUEUE, READY, IN_MATCH
+  mode        String   @default("5v5_CAP") // 5V5_CAP, 5V5_AUTO, 1V1_AIM
+  region      String   @default("EU_WEST")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  leader      User     @relation("LobbyLeader", fields: [leaderId], references: [id])
+  members     LobbyMember[]
+  
+  @@index([status])
+  @@index([code])
+}
+
+model LobbyMember {
+  id        String   @id @default(cuid())
+  lobbyId   String
+  userId    String
+  isReady   Boolean  @default(false)
+  isCaptain Boolean  @default(false)
+  joinedAt  DateTime @default(now())
+  
+  lobby     Lobby    @relation(fields: [lobbyId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([lobbyId, userId])
+  @@index([lobbyId])
+  @@index([userId])
+}
+
+model Match {
+  id            String     @id @default(cuid())
+  serverId      String
+  status        String     @default("PENDING") // PENDING, CHECK_IN, VETO, SERVER_START, LIVE, FINISHED, CANCELLED
+  selectedMap   String?
+  teamAScore    Int        @default(0)
+  teamBScore    Int        @default(0)
+  maxRounds     Int        @default(30)
+  hltvDemoUrl   String?
+  matchToken    String     @unique @default(cuid())
+  rconPassword  String?
+  createdAt     DateTime   @default(now())
+  startedAt     DateTime?
+  finishedAt    DateTime?
+  
+  server        ServerPool @relation(fields: [serverId], references: [id])
+  players       MatchPlayer[]
+  vetoes        MatchVeto[]
+  
+  @@index([status])
+  @@index([serverId])
+  @@index([createdAt])
+}
+
+model MatchPlayer {
+  id         String   @id @default(cuid())
+  matchId    String
+  userId     String
+  team       String   // TEAM_A, TEAM_B
+  kills      Int      @default(0)
+  deaths     Int      @default(0)
+  assists    Int      @default(0)
+  headshots  Int      @default(0)
+  damage     Int      @default(0)
+  mvps       Int      @default(0)
+  eloChange  Int      @default(0)
+  rating     Float?
+  connected  Boolean  @default(false)
+  
+  match      Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id])
+  
+  @@unique([matchId, userId])
+  @@index([matchId])
+  @@index([userId])
+}
+
+model MatchVeto {
+  id         String   @id @default(cuid())
+  matchId    String
+  userId     String?  // null for auto-ban
+  mapName    String
+  vetoOrder  Int
+  isBan      Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  
+  match      Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  
+  @@index([matchId])
+  @@index([vetoOrder])
+}
+
+model ServerPool {
+  id           String   @id @default(cuid())
+  ip           String
+  port         Int
+  rconPassword String
+  apiKey       String   @unique @default(cuid())
+  isBusy       Boolean  @default(false)
+  location     String   @default("EU_WEST")
+  status       String   @default("ONLINE") // ONLINE, OFFLINE, MAINTENANCE
+  currentMatch String?
+  lastPing     DateTime @default(now())
+  createdAt    DateTime @default(now())
+  
+  matches      Match[]
+  
+  @@unique([ip, port])
+  @@index([isBusy])
+  @@index([status])
+}
+
+model PenaltyHistory {
+  id             String   @id @default(cuid())
+  userId         String
+  reason         String   // DODGE_MATCH, TOXICITY, CHEAT, MANUAL_BAN
+  durationMinutes Int
+  expiresAt      DateTime?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  
+  user           User     @relation(fields: [userId], references: [id])
+  
+  @@index([userId])
+  @@index([isActive])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([sessionToken])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}

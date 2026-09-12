@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CS 1.6 Retro Design System */
+
+:root {
+  --cs-bg: #191e19;
+  --cs-card: #252d25;
+  --cs-accent: #c2c62c;
+  --cs-secondary: #5c7c5c;
+  --cs-border: #3a473a;
+  --cs-light: #3d4a3d;
+  --cs-hover: #2f3a2f;
+  
+  --status-green: #48b848;
+  --status-red: #d9534f;
+  --status-yellow: #e0a96d;
+  --status-blue: #4a90d9;
+  --status-orange: #d98a4a;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background-color: var(--cs-bg);
+  color: #e0e0e0;
+  font-family: 'Arial', sans-serif;
+  min-height: 100vh;
+}
+
+/* CS 1.6 Style Button */
+.cs-button {
+  @apply px-6 py-3 rounded-none font-bold uppercase tracking-wider;
+  @apply bg-cs-accent text-cs-bg border-2 border-cs-accent;
+  @apply hover:bg-cs-hover hover:text-cs-accent transition-all duration-150;
+  @apply shadow-cs-outer active:translate-y-0.5;
+}
+
+.cs-button-secondary {
+  @apply px-6 py-3 rounded-none font-bold uppercase tracking-wider;
+  @apply bg-transparent text-cs-accent border-2 border-cs-border;
+  @apply hover:border-cs-accent hover:text-cs-accent transition-all duration-150;
+}
+
+/* CS Panel/Card */
+.cs-panel {
+  @apply bg-cs-card border border-cs-border;
+  @apply shadow-cs-inner p-4;
+}
+
+.cs-panel-header {
+  @apply bg-cs-light border-b border-cs-border;
+  @apply px-4 py-2 font-bold uppercase tracking-wider text-cs-accent;
+}
+
+/* Status Indicators */
+.status-ready {
+  @apply text-status-green;
+}
+
+.status-queue {
+  @apply text-status-yellow;
+}
+
+.status-banned {
+  @apply text-status-red;
+}
+
+.status-live {
+  @apply text-status-green animate-pulse;
+}
+
+/* Retro Text Effects */
+.cs-title {
+  @apply font-cs text-2xl md:text-3xl lg:text-4xl;
+  @apply text-cs-accent uppercase tracking-widest;
+  @apply drop-shadow-lg;
+}
+
+.cs-subtitle {
+  @apply font-retro text-sm md:text-base;
+  @apply text-gray-400 uppercase tracking-wider;
+}
+
+/* Lobby Slot Styles */
+.lobby-slot {
+  @apply w-full aspect-square bg-cs-light border-2 border-cs-border;
+  @apply flex items-center justify-center;
+  @apply hover:border-cs-accent transition-all duration-150;
+  @apply cursor-pointer;
+}
+
+.lobby-slot-filled {
+  @apply bg-cs-card border-cs-accent;
+}
+
+.lobby-slot-empty {
+  @apply opacity-50 hover:opacity-100;
+}
+
+/* Queue Animation */
+.queue-spinner {
+  @apply w-8 h-8 border-4 border-cs-border border-t-cs-accent;
+  @apply rounded-full animate-spin;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-cs-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-cs-secondary rounded-sm;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-cs-accent;
+}
+
+/* Utility Classes */
+.text-retro {
+  @apply font-retro;
+}
+
+.text-cs {
+  @apply font-cs;
+}
+
+.border-cs {
+  @apply border-cs-border;
+}
+
+.bg-cs-gradient {
+  background: linear-gradient(180deg, #252d25 0%, #191e19 100%);
+}
+
+/* Map Pool Icons */
+.map-icon {
+  @apply w-16 h-16 bg-cs-light border-2 border-cs-border;
+  @apply flex items-center justify-center;
+  @apply hover:border-cs-accent transition-all duration-150;
+}
+
+.map-banned {
+  @apply opacity-30 grayscale border-status-red;
+}
+
+.map-picked {
+  @apply border-status-green shadow-cs-accent;
+}
+
+/* Responsive Grid */
+.lobby-grid {
+  @apply grid grid-cols-5 gap-2 md:gap-4;
+}
+
+@media (max-width: 768px) {
+  .lobby-grid {
+    @apply grid-cols-5 gap-1;
+  }
+}
